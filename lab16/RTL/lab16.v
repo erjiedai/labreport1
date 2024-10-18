@@ -10,9 +10,9 @@ module lab16(
     output LED3
     );
  
-assign LED0 = (~KEY3) & (~KEY2);
-assign LED1 = KEY2 & (~KEY3);
-assign LED2 = KEY3 & (~KEY2);
-assign LED3 = KEY3 & KEY2;
+assign LED0 = KEY3 | KEY2;
+assign LED1 = KEY2 | (~KEY3);
+assign LED2 = KEY3 | (~KEY2);
+assign LED3 = (~KEY2) | (~KEY3);
  
 endmodule
