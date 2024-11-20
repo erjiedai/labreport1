@@ -3,36 +3,34 @@
 
 module  vga_pic
 (
-    input   wire            vga_clk     ,   //输入工作时钟,频率25MHz
-    input   wire            sys_rst_n   ,   //输入复位信号,低电平有效
-    input   wire    [9:0]   pix_x       ,   //输入有效显示区域像素点X轴坐标
-    input   wire    [9:0]   pix_y       ,   //输入有效显示区域像素点Y轴坐标
+    input   wire            vga_clk     ,   
+    input   wire            sys_rst_n   ,   
+    input   wire    [9:0]   pix_x       ,  
+    input   wire    [9:0]   pix_y       ,   
 
-    output  reg     [15:0]  pix_data        //输出像素点色彩信息
+    output  reg     [15:0]  pix_data        
 );
 
 
-//parameter define
-parameter   CHAR_B_H=   10'd192 ,   //字符开始X轴坐标
-            CHAR_B_V=   10'd208 ;   //字符开始Y轴坐标
+parameter   CHAR_B_H=   10'd192 ,   
+            CHAR_B_V=   10'd208 ;   
 
-parameter   CHAR_W  =   10'd256 ,   //字符宽度
-            CHAR_H  =   10'd64  ;   //字符高度
+parameter   CHAR_W  =   10'd256 ,   
+            CHAR_H  =   10'd64  ;   /
 
-parameter   BLACK   =   16'h0000,   //黑色
-            WHITE   =   16'hFFFF,   //白色
-            GOLDEN  =   16'hFEC0;   //金色
+parameter   BLACK   =   16'h0000,   
+            WHITE   =   16'hFFFF,   
+            GOLDEN  =   16'hFEC0;   
 
-//wire  define
-wire    [9:0]   char_x  ;   //字符显示X轴坐标
-wire    [9:0]   char_y  ;   //字符显示Y轴坐标
 
-//reg   define
-reg     [255:0] char    [63:0]  ;   //字符数据
+wire    [9:0]   char_x  ;   
+wire    [9:0]   char_y  ;   
+
+reg     [255:0] char    [63:0]  ;  
 
 
 
-//字符显示坐标
+
 assign  char_x  =   (((pix_x >= CHAR_B_H) && (pix_x < (CHAR_B_H + CHAR_W)))
                     && ((pix_y >= CHAR_B_V) && (pix_y < (CHAR_B_V + CHAR_H))))
                     ? (pix_x - CHAR_B_H) : 10'h3FF;
@@ -40,7 +38,7 @@ assign  char_y  =   (((pix_x >= CHAR_B_H) && (pix_x < (CHAR_B_H + CHAR_W)))
                     && ((pix_y >= CHAR_B_V) && (pix_y < (CHAR_B_V + CHAR_H))))
                     ? (pix_y - CHAR_B_V) : 10'h3FF;
 
-//char:字符数据
+
 always@(posedge vga_clk)
     begin
 char[0]  <= 256'h0000000000000000000000000000000000000000000000000000000000000000;
@@ -108,7 +106,7 @@ char[61]  <= 256'h00000000000000000000000000000000000000000000000000000000000000
 char[62]  <= 256'h0000000000000000000000000000000000000000000000000000000000000000;
 char[63]  <= 256'h0000000000000000000000000000000000000000000000000000000000000000;
 end
-//pix_data:输出像素点色彩信息,根据当前像素点坐标指定当前像素点颜色数据
+
 always@(posedge vga_clk or negedge sys_rst_n)
     if(sys_rst_n == 1'b0)
         pix_data    <= BLACK;
